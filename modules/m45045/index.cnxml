@@ -1,0 +1,224 @@
+<document xmlns="http://cnx.rice.edu/cnxml">
+
+<title>Apache httpd Web Server - basic configuration</title>
+<metadata xmlns:md="http://cnx.rice.edu/mdml">
+  <md:content-id>m45045</md:content-id>
+  <md:title>Apache httpd Web Server - basic configuration</md:title>
+  <md:abstract/>
+  <md:uuid>c86b8735-c8f7-4004-b381-9f6f58331772</md:uuid>
+</metadata>
+
+<content>
+
+<exercise id="eip-257"><title>Configuration file</title><problem id="eip-114">
+  <para id="eip-227">
+   Open and review the main configuration file for our Apache installation.
+<note id="eip-id1172153451314">You can use any text editor.  The solutions will use leafpad from Knoppix liveCD. Other editors on the Knoppix CD include: vi, xedit, nano, pico. </note>
+
+
+  </para>
+</problem>
+
+<solution id="eip-52">
+  <para id="eip-102">
+    <code>leafpad /home/knoppix/apache/conf/httpd.conf</code>
+  </para>
+</solution>
+</exercise>
+
+
+  <exercise id="eip-623"><problem id="eip-733">
+  <para id="eip-886">
+    First let's fix the error message which comes up every time we start apache. The message says:
+</para>
+<para id="sz1">
+httpd: Could not determine the server's fully qualified domain name, using 127.0.0.1 for ServerName
+</para>
+  
+</problem>
+
+<solution id="eip-975">
+  <para id="eip-167">To fix it edit the httpd.conf file ( leafpad /home/knoppix/apache/conf/httpd.conf ) and change the ServerName directive to be:
+<code>
+ServerName localhost:8080
+</code>
+
+
+</para><para id="sz2">The directive before the change:
+<newline/><newline/>
+<code>
+#ServerName www.example.com:80
+</code>
+
+<newline/><newline/>
+The directive after change:
+<newline/><newline/>
+<code>
+ServerName localhost:8080
+</code></para><para id="sz3">Save the file and restart apache:
+<newline/><newline/>
+<code>
+cd /home/knoppix/apache
+bin/apachectl stop
+bin/apachectl start
+</code>
+<newline/><newline/>
+or
+<newline/><newline/>
+<code>
+/home/knoppix/apache/bin/apachectl restart
+</code>
+<newline/><newline/>
+Now you shouldn't see an error message when Apache starts.
+  </para></solution>
+</exercise>
+
+<exercise id="eip-232"><problem id="eip-977">
+  <para id="eip-398">Find the following directives and change their values in the configuration file. For new configuration to take effect you have to save the configuration file and restart apache. Above at the end of step 1 you will find the commands to restart apache.
+
+<preformat id="eip-id1167661023010">
+Find the following directives and change their values:
+
+A)
+
+Change ServerAdmin to your email address.  Before change: ServerAdmin you@example.com
+Change to:
+ServerAdmin myemail@host.com
+
+B)
+
+Add index.php to the default pages.  Before change: DirectoryIndex index.html index.html.var
+
+Change to:
+DirectoryIndex index.html index.html.var index.php
+
+C)
+Change the detail of logging.  Before change: LogLevel warn
+
+Change to:
+LogLevel error
+
+D)
+Change Server Signature:
+ServerSignature Email
+
+E)
+Change the server HTTP Header information:
+ServerTokens Prod
+
+F)
+Change the user and group which Apache runs as:
+User knoppix
+Group knoppix
+
+</preformat>
+  </para></problem>
+
+<solution id="eip-17">
+  <para id="eip-446"><preformat id="eip-id1165422511005">
+Test the excercise by visiting the following urls on the your server:
+
+http://localhost:8080/manual/
+
+http://localhost:8080/icons/
+(note at the bottom of the icon files the localhost link. 
+It should have your email address as the destination url)
+
+http://localhost:8080/cgi-bin/test-cgi
+(if you get an error here that's fine. to fix the error run:
+chmod 777 /home/knoppix/apache/cgi-bin/*
+
+view the HTTP HEADERS of your server:
+wget --spider -S http://localhost:8080/
+</preformat>
+  </para></solution>
+</exercise><exercise id="eip-870"><title>Virtual Hosts</title><problem id="eip-649">
+  <para id="eip-838"><preformat id="eip-id1165446440523">
+
+1. Setup site host names
+
+Edit /etc/hosts. You need to edit the lines as the root user.  In the terminal type in:
+
+             su
+
+             leafpad /etc/hosts
+
+add the following lines:
+
+127.0.0.1 www.co246.com
+127.0.0.1 go.co246.com
+127.0.0.1 student.co246.com
+
+Exit the shell as root so you are logged in as Knoppix.
+
+Test the host names by visiting the urls in a browser. Remember to start the Apache server on port 8080.
+</preformat>
+
+2. Configure Apache to recognize Virtual Hosts
+
+<newline/><newline/>
+Edit httpd.conf and add the following sections:
+
+<preformat id="eip-id1172153933161">
+# Use name-based virtual hosting.
+#
+NameVirtualHost *:8080
+
+#
+# VirtualHost example:
+# Almost any Apache directive may go into a VirtualHost container.
+# The first VirtualHost section is used for requests without a known
+# server name.
+#
+
+&lt;VirtualHost *:8080&gt;
+ServerAdmin student@grcc.edu
+DocumentRoot /home/knoppix/go_co246_htdocs/
+ServerName go.co246.com
+ErrorLog logs/go_co246_error_log
+CustomLog logs/go_co246_access_log common
+&lt;/VirtualHost&gt;
+
+&lt;VirtualHost *:8080&gt;
+ServerAdmin student@grcc.edu
+DocumentRoot /home/knoppix/student_co246_htdocs/
+ServerName student.co246.com
+ErrorLog logs/student_co246_error_log
+CustomLog logs/student_co246_access_log common
+&lt;VirtualHost&gt;
+
+&lt;VirtualHost *:8080&gt;
+ServerAdmin student@grcc.edu
+DocumentRoot /home/knoppix/www_co246_htdocs/
+ServerName www.co246.com
+ErrorLog logs/www_co246_error_log
+CustomLog logs/www_co246_access_log common
+&lt;VirtualHost&gt;
+</preformat>
+
+3. Create each DocumentRoot directory with a sample index.html page. For example create:
+
+
+<preformat id="eip-id1172162467097">
+mkdir /home/knoppix/www_co246_htdocs
+cd /home/knoppix/www_co246_htdocs
+echo “This is www_co246 site” &gt; index.html
+
+mkdir /home/knoppix/go_co246_htdocs
+cd /home/knoppix/go_co246_htdocs
+echo “This is go_co246 site” &gt; index.html
+
+mkdir /home/knoppix/student_co246_htdocs
+cd /home/knoppix/student_co246_htdocs
+echo “This is student_co246 site” &gt; index.html 
+</preformat>
+
+  </para></problem>
+
+<solution id="eip-415">
+  <para id="eip-396">Open a browser and navigate to <newline/><newline/>
+<code>http://www.co246.com, http://go.co246.com, http://student.co246.com</code>
+  </para></solution>
+</exercise><para id="delete_me"/></content>
+
+</document>

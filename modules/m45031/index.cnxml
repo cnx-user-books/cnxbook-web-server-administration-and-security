@@ -1,0 +1,145 @@
+<document xmlns="http://cnx.rice.edu/cnxml">
+  <title>Apache httpd Web Server - installation from source code</title>
+<metadata xmlns:md="http://cnx.rice.edu/mdml">
+  <md:content-id>m45031</md:content-id>
+  <md:title>Apache httpd Web Server - installation from source code</md:title>
+  <md:abstract>This module provides a step by step guide on compiling Apache web server on a Linux host.  A freely available Knoppix Linux can be used as a live CD to serve as the Linux environment.  On any Windows computer with a CD ROM the students can download the .iso file for Knoppix and burn it on an optical media.  Alternatively, VMware Player can be used to run the .iso live CD.</md:abstract>
+  <md:uuid>cc378118-7ef8-4770-8621-822668accaf1</md:uuid>
+</metadata>
+
+<content>
+    <para id="import-auto-id1164310904759">Start the lab by booting your Knoppix system. You can simply put it in a CDROM and restart the computer or you can use a VMware virtual machine. Once you see the Knoppix desktop simply click on the Console icon at the bottom of the screen. You can stay logged in as the knoppix user.  Open the Terminal window for the lab and type in commands into the Terminal.</para><exercise id="eip-254"><title>Step 1</title><problem id="eip-919">
+  <para id="eip-31">1. Download Apache sources.  You can download the source code directly from the Apache Foundation (http://httpd.apache.org/), or you can use the local GRCC repository. In the classroom the local download will be much faster.
+  </para></problem>
+
+<solution id="eip-770">
+  <para id="eip-220">
+   wget http://raider.grcc.edu/~smachaje/co246/httpd-2.0.59.tar.gz
+  </para>
+</solution>
+</exercise><exercise id="eip-853"><title>Step 2</title><problem id="eip-448">
+  <para id="eip-399">
+    2. Decompress and extract the source files.
+  </para>
+</problem>
+
+<solution id="eip-975">
+  <para id="eip-710">
+    tar -xzvf httpd-2.0.59.tar.gz
+  </para>
+</solution>
+</exercise><exercise id="eip-69"><title>Step 3</title><problem id="eip-467">
+  <para id="eip-119">
+    3. Change directory to the source directory.
+  </para>
+</problem>
+
+<solution id="eip-646">
+  <para id="eip-53">
+    cd httpd-2.0.59
+  </para>
+</solution>
+</exercise><exercise id="eip-808"><title>Step 4</title><problem id="eip-804">
+  <para id="eip-628">
+    4. Clean source tree.
+If you are compiling for the first time you can skip this step.
+Executing this step will not change any configuration.
+  </para>
+</problem>
+
+<solution id="eip-240">
+  <para id="eip-428">
+   make clean
+  </para>
+</solution>
+</exercise><exercise id="eip-994"><title>Step 5</title><problem id="eip-598">
+  <para id="eip-683">
+    5. Configure the sources.
+  </para>
+</problem>
+
+<solution id="eip-968">
+  <para id="eip-435">
+  ./configure --prefix=/home/knoppix/apache --with-port=8080
+  </para>
+</solution>
+</exercise><exercise id="eip-542"><title>Step 6</title><problem id="eip-286">
+  <para id="eip-389">
+    6. Compile source code
+  </para>
+</problem>
+
+<solution id="eip-44">
+  <para id="eip-647">
+    make
+  </para>
+</solution>
+</exercise><exercise id="eip-641"><title>Step 7</title><problem id="eip-462">
+  <para id="eip-749">
+    7. Install source code
+  </para>
+</problem>
+
+<solution id="eip-918">
+  <para id="eip-464">
+    make install
+  </para>
+</solution>
+</exercise><exercise id="eip-744"><title>Step 8</title><problem id="eip-117">
+  <para id="eip-58">
+   8. Start Apache server
+  </para>
+</problem>
+
+<solution id="eip-325">
+  <para id="eip-881">
+cd /home/knoppix/apache
+	
+  </para>
+ <para id="eip-882">
+bin/apachectl start
+</para>
+</solution>
+</exercise><exercise id="eip-371"><title>Step 9</title><problem id="eip-291">
+  <para id="eip-969">
+    9. Test to check if Apache is running
+  </para>
+</problem>
+
+<solution id="eip-377">
+  <para id="eip-798">
+   Open the browser and navigate to http://localhost:8080/
+  </para>
+</solution>
+</exercise><exercise id="eip-816"><title>Step 10</title><problem id="eip-558">
+  <para id="eip-133">10. Test with terminal commands
+  </para></problem>
+
+<solution id="eip-25">
+  <para id="eip-657">
+    netstat -ln |grep 8080
+	
+  </para>
+<para id="eip-656">
+ps -ef |grep httpd
+</para>
+</solution>
+</exercise><exercise id="eip-627"><title>Step 11</title><problem id="eip-704">
+  <para id="eip-781">
+    11. To start the entire process over run the following command to delete your apache system.  
+ATTENTION! The rm -rf command will uninstall or delete the Apache Web Server.
+
+  </para>
+</problem>
+
+<solution id="eip-182">
+  <para id="eip-334">
+   killall httpd
+	
+  </para>
+<para id="eip-335">
+rm -rf /home/knoppix/apache
+</para>
+</solution>
+</exercise></content>
+</document>

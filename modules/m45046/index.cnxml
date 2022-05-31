@@ -1,0 +1,55 @@
+<document xmlns="http://cnx.rice.edu/cnxml">
+
+<title>Apache httpd Web Server - logs lab</title>
+<metadata xmlns:md="http://cnx.rice.edu/mdml">
+  <md:content-id>m45046</md:content-id>
+  <md:title>Apache httpd Web Server - logs lab</md:title>
+  <md:abstract/>
+  <md:uuid>265eb1f8-8d11-4088-a80d-cd42388da29f</md:uuid>
+</metadata>
+
+<content>
+  <exercise id="eip-192"><problem id="eip-658">
+  <para id="eip-587"><preformat id="eip-id1165746752168">
+1. Enable extended server status in httpd.conf file.
+You can find instructions in the Apache manual http://httpd.apache.org/docs/2.0/mod/mod_status.html
+
+2. Generate Apache activity:
+
+apache/bin/ab -n 200 -c 1 http://localhost:8080/
+
+apache/bin/ab -n 200000 -c 1000 http://localhost:8080/
+
+3. View the server status at:
+http://localhost:8080/server-status
+
+4. Monitor log files at apache/logs/
+tail -f apache/logs/access_log
+
+5. Generate error logs:
+apache/bin/ab -n 200 -c 1 http://localhost:8080/`date +%s`
+
+for ((i=1;i&lt;5;i+=1));  do apache/bin/ab -n 2 -c 1 http://localhost:8080/`date +%s`; sleep 2; done;
+
+</preformat>
+
+
+
+
+
+  </para></problem>
+
+<solution id="eip-715">
+  <para id="eip-354">
+Monitor log files at apache/logs/
+<newline/><newline/>
+<code>
+cat /home/knoppix/apache/logs/access_log
+  </code></para>
+</solution>
+</exercise><para id="delete_me">
+     <!-- Insert module text here -->
+  </para>
+</content>
+
+</document>
